@@ -1,0 +1,91 @@
+---
+layout: post
+title: "HD-OJ-1005"
+date: 2014-04-22 16:36
+comments: true
+tags: ACM
+---
+杭电OJ [1005](http://acm.hdu.edu.cn/showproblem.php?pid=1005)：
+
+<!-- more -->
+
+#####Problem Description
+> A number sequence is defined as follows: f(1) = 1, f(2) = 1, f(n) = (A * f(n - 1) + B * f(n - 2)) mod 7. Given A, B, and n, you are to calculate the value of f(n).
+
+#####Input
+> The input consists of multiple test cases. Each test case contains 3 integers A, B and n on a single line (1 <= A, B <= 1000, 1 <= n <= 100,000,000). Three zeros signal the end of input and this test case is not to be processed.
+
+#####Output
+> For each test case, print the value of f(n) on a single line.
+
+#####Sample Input
+> 1 1 3
+> 
+> 1 2 10
+> 
+> 0 0 0
+
+#####Sample Output
+> 2
+> 
+> 5
+
+题目对于那些ACM选手来说，肯定不是什么大问题，不过对于我们这种只能刷刷水题的人来说，还是有点困难的。
+
+我看到题目之后的第一反应是对于每一个特定的A和B，每次的计算结果都存到数组里，这样不用每个输入都重新计算，可以节省一定量的时间，当时觉得这个想法已经不错了，但是还是TLE了。最后上网找了答案，发现很多答案里都提到f(n)的值其实是循环的，而且最大的循环长度不会超过49（即起码在n=49之前，f(n)的值就开始循环了，f(k)=f(1)，f(k+1)=f(2)，f(k+2)=f(3)，...，k<=49）。但是网上很多文章并没有指出怎么才能发现，或者说推导出这个规律。最后我花了点时间，自己推了下才终于知道了发现规律的方法。
+
+首先，观察到递推式里有mod 7，就知道f(n)的所有值都在[0, 6]之间，有7个取值。
+
+然后，观察递推式，f(n) = (A * f(n - 1) + B * f(n - 2)) mod 7，A和B是定常数，而f(n - 1)和f(n - 2)的取值都分别有7种可能，也就是说f(n)的取值最多有49种组合（这49种组合中，和可能相同，但是代表的意义不同，例如1+4和2+3是不同的，2+3和3+2也是不同的）。当n > 51时（因为这种组合是从n=3开始算的），f(n)的取值组合必然是之前出现过了的，也就是必存在
+```
+f(n) = f(k), f(n - 1) + f(n - 2) = f(k - 1) + f(k - 2)
+f(n - 1) = f(k - 1)
+f(n - 2) = f(k - 2)
+```
+但是其实我们可以知道，f(n) = 0 + 0，这种情况是不可能的（因为这样话很容易证明对于所有的n，f(n)都是为0），所以其实最多只有48种情况，即从n = 50开始，组合就必然出现重复了。
+其次，我们知道了f(n)和f(k)的取值组合完全相同后，只要证明f(n + 1) = f(k + 1)的即可证明f(n)的取值在n > 49后必然存在循环。
+```
+f(n + 1) = f(n) + f(n - 1)
+f(n) = f(k)
+f(n - 1) = f(k - 1)
+```
+由以上条件可知，f(n + 1) = f(k + 1)，同理可以推导出f(n + 2) = f(k + 2)，...，等等。并最终证明f(n)的值是循环的。
+
+最后，我们已经证明了f(n)是存在循环的，最后要证明的是f(n)是整循环的，也就是说循环起始点应该是f(n) = f(n - 1) + f(n - 2) = f(1) + f(2)。先假设f(n + 2) = f(5) = f(n + 1) + f(n) = f(4) + f(3)，n是循环开始点，由假设可以推导出f(n + 1) = f(n) + f(n - 1) = f(4) + f(3)，f(n - 1)和f(3)之前存在两种可能：
+
+	1. f(n - 1) = f(3)
+	2. |f(n - 1) - f(3)| = 7
+
+由f(n)的取值范围[0, 6]知，第二种情况是不可能的，所以f(n - 1) = f(3)，所以n - 1是循环开始点，依次可以类推n - 2是循环开始点，...，直到f(n - k) = f(3) = f(n - k - 1) + f(n - k - 2) = f(2) + f(1)，n - k - 2是循环开始点。所以由证明可知，如果n是循环开始点，则f(n) = f(1)，f(n + 1) = f(2)，...。
+
+知道了f(n)的值是循环的之后，这道题目就很容易做了，只要求出循环开始点就行了，即f(i - 1) = 1， f(i) = 1。
+
+具体实现代码如下：
+```cpp
+#include <iostream>
+using namespace std;
+
+int f[50] = {0, 1, 1};
+int a, b, n;
+int main() {
+    while (cin >> a >> b >> n) {
+        if (a == 0 && b == 0 && n == 0) {
+            break;
+        }
+        if (n > 2) {
+            int i;
+            for (i = 3; i <= 49; i++) {
+                f[i] = (a * f[i - 1] + b * f[i - 2]) % 7;
+                if (f[i] == f[2] && f[i - 1] == f[1]) {
+                    break;
+                }
+            }
+            i -= 2;
+            n = n % i == 0 ? i : n % i;
+        }
+        cout << f[n] << endl;
+    }
+}
+```
+
+    

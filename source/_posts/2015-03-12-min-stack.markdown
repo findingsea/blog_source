@@ -1,0 +1,109 @@
+---
+layout: post
+title: "Min Stack@LeetCode"
+date: 2015-03-12 13:12
+comments: true
+tags: LeetCode
+---
+[Min Stack](https://leetcode.com/problems/min-stack/)
+
+<!-- more -->
+
+这一题我一开始的实现方法是：维护一个栈用来保存数据，然后用一个整型（min）保存当前最小值。这样针对每一个操作：
+
+* `push(x)`输入入栈，然后更新最小值
+* `pop()`出栈，然后更新最小值
+* `top()`直接返回栈顶元素
+* `getMin()`直接返回最小值
+
+这样的实现方法，除`pop()`外，其实方法都是`O(1)`的，符合题目要求的`constant time`。但是`pop()`操作，在最坏情况下是`O(n)`的复杂度（最小值出栈了）。虽然从理论上并不能完全保证`constant time`，但是在测试数据分布比较均匀的情况下，AC是没问题的，而且相比于正确方法可能还效率高一点，毕竟出栈入栈都是需要时间的。
+
+代码如下：
+
+``` java
+class MinStack {
+
+    private Stack<Integer> stack;
+    private int min;
+
+    public MinStack() {
+        stack = new Stack<Integer>();
+        min = Integer.MAX_VALUE;
+    }
+
+    public void push(int x) {
+        stack.push(x);
+        min = Math.min(min, x);
+    }
+
+    public void pop() {
+        int top = stack.pop();
+        if (top == min) {
+            min = Integer.MAX_VALUE;
+            Iterator iterator = stack.iterator();
+            while (iterator.hasNext()) {
+                min = Math.min(min, (Integer) iterator.next());
+            }
+        }
+    }
+
+    public int top() {
+        return stack.peek();
+    }
+
+    public int getMin() {
+        return min;
+    }
+}
+
+```
+
+完整正确的方法是：维护两个栈。一个数据栈，一个最小值栈。
+
+数据栈的维护和前一种方法相同，也就是一般栈的维护方法。
+
+最小栈的维护，包括：
+
+* 有数据输入时，检查是否小于等于最小栈的栈顶元素，如果是则将新元素压入最小栈
+* 有输入弹出时，检查是否等于最小栈的栈顶元素，如果是则将最小栈栈顶元素弹出
+* 调用`getMin()`方法时，直接返回最小栈的栈顶元素
+
+之前我怀疑这种方法有问题的时候，考虑到的是：如果当前弹出的元素第二或者第三小的元素，那么如果维护最小栈。后来发现这样的担心是多余的，由于栈的特性，如果要弹出第二或者第三小的元素，那么最小元素必然在此前已经被弹出，而不需要考虑多余的维护策略。
+
+具体代码如下：
+
+``` java
+class MinStack {
+
+    private Stack<Integer> stack;
+    private Stack<Integer> minStack;
+
+    public MinStack() {
+        stack = new Stack<Integer>();
+        minStack = new Stack<Integer>();
+    }
+
+    public void push(int x) {
+        stack.push(x);
+        if (minStack.isEmpty() || x <= minStack.peek()) {
+            minStack.push(x);
+        }
+    }
+
+    public void pop() {
+        int top = stack.pop();
+        if (top == minStack.peek()) {
+            minStack.pop();
+        }
+    }
+
+    public int top() {
+        return stack.peek();
+    }
+
+    public int getMin() {
+        return minStack.peek();
+    }
+}
+
+```
