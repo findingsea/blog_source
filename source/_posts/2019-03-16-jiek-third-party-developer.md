@@ -5,6 +5,8 @@ tags: essay
 
 即刻，是一个「我也不知道怎么定义，总之挺好玩的」app，App Store [🔗](https://itunes.apple.com/cn/app/%E5%8D%B3%E5%88%BB-%E7%9C%8B%E7%82%B9%E5%A5%BD%E4%B8%9C%E8%A5%BF/id966129812?l=en&mt=8)。上面不仅有很多有趣的人，还有很多程序员👨‍💻‍开发了不少基于即刻的小项目，非常好玩有趣，本文就罗列一下我已知的几个项目。
 
+后续更新请见：[findingsea/jike-third-party-developer](https://github.com/findingsea/jike-third-party-developer)
+
 <!-- more -->
 
 <img src="https://raw.githubusercontent.com/findingsea/blog_source/master/images/jike.jpg" alt="即刻 - 看点好东西 by If Tech" width="25%" height="25%" border=0>
