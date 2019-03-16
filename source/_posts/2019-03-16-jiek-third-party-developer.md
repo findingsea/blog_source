@@ -1,4 +1,4 @@
-title: 即刻第三方开发者列表
+title: 即刻第三方开发者
 date: 2019-03-16 13:09:53
 tags: essay
 ---
@@ -20,5 +20,7 @@ tags: essay
 Ⓙ 即刻黄历 - JSBox 脚本，让你在 iOS 通知中心看黄历，🔗：[即刻黄历](https://xteko.com/redir?name=Jike%20Calendar&url=https%3A%2F%2Fstorage.ryannn.com%2Fjsbox%2FJike-Calendar.js&icon=icon_125.png&types=3&version=1.0&author=Ryan)，by Ryan
 
 Ⓙ 果果名片生成器 - 帮你生成你的即刻名片，GitHub 🔗：[spencerwooo/jike-guoguo-badge](https://github.com/spencerwooo/jike-guoguo-badge)，by Ⓙ @SpencerWoo
+
+Ⓙ Love Jike Extension，优化即刻网页版体验的 Chrome 插件，GitHub 🔗：[Doila/love-jike-chrome-extension](https://github.com/Doila/love-jike-chrome-extension)，by Ⓙ @呜啦啦朵小小
 
 等待后续补充……
