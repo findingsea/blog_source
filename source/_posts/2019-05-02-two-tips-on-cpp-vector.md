@@ -36,7 +36,8 @@ void Process() {
 起因是我在代码里面新增了如下代码（大致）：
 
 ``` cpp
-void EraseElement(const vector<Element>::iterator& element_iter, vector<Element>& element_list) {
+void EraseElement(const vector<Element>::iterator& element_iter,
+                vector<Element>& element_list) {
   while (element_iter != element_list.end()) {
     element_list.erase(element_iter);
   }
@@ -50,7 +51,8 @@ void EraseElement(const vector<Element>::iterator& element_iter, vector<Element>
 另外 `erase` 本身的确比较危险，主要还是 `erase` 的时候 `iterator` 本身没发生变化，但是指向的元素变了，，在很多时候 `iterator` 会自然地指向下一个元素，但是由于这是未定义的行为，这里面可能会有不可预期的地方，所以最终改成显示的获取返回重新赋值（`erase()` 会返回下一个迭代器，但这一点常常被忽略），这样就能保证安全性了。更安全更推荐的做法应该是使用 `remove_if()` 这里就不展开讲了。
 
 ``` cpp
-void EraseElement(vector<Element>& element_list, vector<Element>::iterator element_iter ) {
+void EraseElement(vector<Element>& element_list,
+                vector<Element>::iterator element_iter ) {
   while (element_iter != element_list.end()) {
     element_iter = element_list.erase(element_iter);
   }
